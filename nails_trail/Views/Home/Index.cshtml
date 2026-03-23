@@ -1,0 +1,68 @@
+﻿@model List<Service>
+@{
+    ViewData["Title"] = "Agendar Cita";
+}
+<a class="btn btn-dark m-lg-1" asp-controller="Home" asp-action="CreateProducts">Productos</a>
+<a class="btn btn-dark m-lg-1" asp-controller="Product" asp-action="CardsProduct">cartas</a>
+<a class="btn btn-dark m-lg-1" asp-controller="Services" asp-action="CrearServicios">Servicios</a>
+<div class="container mt-4">
+    <h2>Agendar Cita</h2>
+
+    <form id="citaForm">
+        <div class="mb-3">
+            <label for="date_calendar" class="form-label">Fecha y Hora:</label>
+            <input type="datetime-local"
+                   class="form-control"
+                   name="date_calendar"
+                   id="date_calendar"
+                   min="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+            <small id="horaNoDisponible" class="text-danger d-none">
+                Esta hora no está disponible
+            </small>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Servicios Disponibles:</label>
+            <div class="row">
+                @foreach (var servicio in Model)
+                {
+                    <div class="col-md-4">
+                        <div class="card mb-2">
+                            <div class="card-body">
+                                <h5>@servicio.ServiceName</h5>
+                                <p>
+                                    $@servicio.Price - @servicio.Duration min
+                                </p>
+
+                                <button type="button"
+                                        class="btn btn-sm btn-primary add-service"
+                                        data-service='{
+                                        "IdService": @servicio.IdService,
+                                        "Name": "@servicio.ServiceName",
+                                        "Price": @servicio.Price,
+                                        "Duration": @servicio.Duration
+                                    }'>
+                                    Agregar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="mb-3">
+            <h5>Servicios Seleccionados:</h5>
+            <ul class="list-group" id="listServices"></ul>
+            <div class="mt-2">
+                <strong>Duración total: <span id="totalDuration">0</span> minutos</strong><br>
+                <strong>Precio total: $<span id="totalPrice">0.00</span></strong>
+            </div>
+        </div>
+
+        <button type="button" class="btn btn-success" id="sending">Agendar Cita</button>
+    </form>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/js/listAdd.js" asp-append-version="true"></script>
+}
